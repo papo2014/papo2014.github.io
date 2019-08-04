@@ -2,49 +2,26 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>bugou_江哥</title>
   
-  
+  <subtitle>一个分享Android开发技术的博客</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
-  <updated>2019-08-01T13:50:59.289Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="https://www.buguo.fun/"/>
+  <updated>2019-08-04T01:37:12.699Z</updated>
+  <id>https://www.buguo.fun/</id>
   
   <author>
-    <name>pan jiang</name>
+    <name>潘江</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>title</title>
-    <link href="http://yoursite.com/2019/08/01/title/"/>
-    <id>http://yoursite.com/2019/08/01/title/</id>
-    <published>2019-08-01T13:49:55.000Z</published>
-    <updated>2019-08-01T13:50:59.289Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;##你好，我是潘江&lt;/p&gt;
-
-        
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Hello World</title>
-    <link href="http://yoursite.com/2019/08/01/hello-world/"/>
-    <id>http://yoursite.com/2019/08/01/hello-world/</id>
+    <link href="https://www.buguo.fun/2019/08/01/hello-world/"/>
+    <id>https://www.buguo.fun/2019/08/01/hello-world/</id>
     <published>2019-08-01T12:23:43.981Z</published>
-    <updated>2019-08-01T12:23:43.981Z</updated>
+    <updated>2019-08-04T01:37:12.699Z</updated>
     
     <summary type="html">
     
@@ -58,6 +35,10 @@
     
     </summary>
     
+      <category term="Hexo" scheme="https://www.buguo.fun/categories/Hexo/"/>
+    
+    
+      <category term="Hexo" scheme="https://www.buguo.fun/tags/Hexo/"/>
     
   </entry>
   
