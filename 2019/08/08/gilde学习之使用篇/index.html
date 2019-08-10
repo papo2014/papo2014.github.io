@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="软件开发, Android">
+  <meta name="keywords" content="Glide,">
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="分享Android开发过程中遇到的技术">
-<meta name="keywords" content="Android，开发，软件，技术">
-<meta property="og:type" content="website">
-<meta property="og:title" content="bugou_江哥">
-<meta property="og:url" content="https://www.buguo.fun/index.html">
+<meta name="description" content="首先从glide的使用方式来一步一步分析glide的源码，如下： 12345Glide.with(myFragment)     .load(url)     .centerCrop()     .placeholder(R.drawable.loading_spinner)     .into(myImageView);  从Glide类的with方法开始分析，来了解Glide对象是如何被创建的">
+<meta name="keywords" content="Glide">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gilde对象是如何被创建的">
+<meta property="og:url" content="https://www.buguo.fun/2019/08/08/gilde学习之使用篇/index.html">
 <meta property="og:site_name" content="bugou_江哥">
-<meta property="og:description" content="分享Android开发过程中遇到的技术">
+<meta property="og:description" content="首先从glide的使用方式来一步一步分析glide的源码，如下： 12345Glide.with(myFragment)     .load(url)     .centerCrop()     .placeholder(R.drawable.loading_spinner)     .into(myImageView);  从Glide类的with方法开始分析，来了解Glide对象是如何被创建的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-10T01:17:01.963Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bugou_江哥">
-<meta name="twitter:description" content="分享Android开发过程中遇到的技术">
+<meta name="twitter:title" content="Gilde对象是如何被创建的">
+<meta name="twitter:description" content="首先从glide的使用方式来一步一步分析glide的源码，如下： 12345Glide.with(myFragment)     .load(url)     .centerCrop()     .placeholder(R.drawable.loading_spinner)     .into(myImageView);  从Glide类的with方法开始分析，来了解Glide对象是如何被创建的">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://www.buguo.fun/">
+  <link rel="canonical" href="https://www.buguo.fun/2019/08/08/gilde学习之使用篇/">
 
 
 
 
 
-  <title>bugou_江哥</title>
+  <title>Gilde对象是如何被创建的 | bugou_江哥</title>
   
 
 
@@ -144,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -290,9 +290,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -322,9 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/08/gilde学习之使用篇/" itemprop="url">Gilde对象是如何被创建的</a></h1>
+          <h1 class="post-title" itemprop="name headline">Gilde对象是如何被创建的</h1>
         
 
         <div class="post-meta">
@@ -379,204 +377,8 @@
 
           
 		
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>首先从glide的使用方式来一步一步分析glide的源码，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(myFragment)</span><br><span class="line">     .load(url)</span><br><span class="line">     .centerCrop()</span><br><span class="line">     .placeholder(R.drawable.loading_spinner)</span><br><span class="line">     .into(myImageView);</span><br></pre></td></tr></table></figure>
-
-<p>从Glide类的with方法开始分析，来了解Glide对象是如何被创建的，with方法有几个重载方法，分别可以传入Context、Activity、FragmentActivity、android.support.v4.app.Fragment、android.app.Fragment、View，它们最终会调用如下方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@NonNull</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> RequestManagerRetriever <span class="title">getRetriever</span><span class="params">(@Nullable Context context)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Context could be null for other reasons (ie the user passes in null), but in practice it will</span></span><br><span class="line">    <span class="comment">// only occur due to errors with the Fragment lifecycle.</span></span><br><span class="line">    Preconditions.checkNotNull(</span><br><span class="line">        context,</span><br><span class="line">        <span class="string">"You cannot start a load on a not yet attached View or a Fragment where getActivity() "</span></span><br><span class="line">            + <span class="string">"returns null (which usually occurs when getActivity() is called before the Fragment "</span></span><br><span class="line">            + <span class="string">"is attached or after the Fragment is destroyed)."</span>);</span><br><span class="line">    <span class="keyword">return</span> Glide.get(context).getRequestManagerRetriever();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">============================================================================</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the singleton.</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> the singleton</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="meta">@NonNull</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Glide <span class="title">get</span><span class="params">(@NonNull Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (glide == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">synchronized</span> (Glide.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (glide == <span class="keyword">null</span>) &#123;</span><br><span class="line">          checkAndInitializeGlide(context);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> glide;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>从上述代码可以看出get方法对Gilde初始化了，创建了一个单例。更详细的在initializeGlide这个方法里面，这个方法是创建glide对象的核心方法，从这个方法里可以看出，注解和manifest的配置可以扩展Glide的功能。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initializeGlide</span><span class="params">(@NonNull Context context, @NonNull GlideBuilder builder)</span> </span>&#123;</span><br><span class="line">    Context applicationContext = context.getApplicationContext();</span><br><span class="line">    <span class="comment">//如果没有使用到glide的注解来增加配置项，这里回空</span></span><br><span class="line">    GeneratedAppGlideModule annotationGeneratedModule = getAnnotationGeneratedGlideModules();</span><br><span class="line">    List&lt;com.bumptech.glide.<span class="keyword">module</span>.GlideModule&gt; manifestModules = Collections.emptyList();</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule == <span class="keyword">null</span> || annotationGeneratedModule.isManifestParsingEnabled()) &#123;</span><br><span class="line">        <span class="comment">//minifest没有配置的话，这里也是空</span></span><br><span class="line">      manifestModules = <span class="keyword">new</span> ManifestParser(applicationContext).parse();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span></span><br><span class="line">        &amp;&amp; !annotationGeneratedModule.getExcludedModuleClasses().isEmpty()) &#123;</span><br><span class="line">      Set&lt;Class&lt;?&gt;&gt; excludedModuleClasses =</span><br><span class="line">          annotationGeneratedModule.getExcludedModuleClasses();</span><br><span class="line">      Iterator&lt;com.bumptech.glide.<span class="keyword">module</span>.GlideModule&gt; iterator = manifestModules.iterator();</span><br><span class="line">      <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">        com.bumptech.glide.<span class="keyword">module</span>.GlideModule current = iterator.next();</span><br><span class="line">        <span class="keyword">if</span> (!excludedModuleClasses.contains(current.getClass())) &#123;</span><br><span class="line">          <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (Log.isLoggable(TAG, Log.DEBUG)) &#123;</span><br><span class="line">          Log.d(TAG, <span class="string">"AppGlideModule excludes manifest GlideModule: "</span> + current);</span><br><span class="line">        &#125;</span><br><span class="line">        iterator.remove();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Log.isLoggable(TAG, Log.DEBUG)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule glideModule : manifestModules) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Discovered GlideModule from manifest: "</span> + glideModule.getClass());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RequestManagerRetriever.RequestManagerFactory factory =</span><br><span class="line">        annotationGeneratedModule != <span class="keyword">null</span></span><br><span class="line">            ? annotationGeneratedModule.getRequestManagerFactory() : <span class="keyword">null</span>;</span><br><span class="line">    builder.setRequestManagerFactory(factory);</span><br><span class="line">    <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule <span class="keyword">module</span> : manifestModules) &#123;</span><br><span class="line">      <span class="keyword">module</span>.applyOptions(applicationContext, builder);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span>) &#123;</span><br><span class="line">      annotationGeneratedModule.applyOptions(applicationContext, builder);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//真正创建glide对象在这里</span></span><br><span class="line">    Glide glide = builder.build(applicationContext);</span><br><span class="line">    <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule <span class="keyword">module</span> : manifestModules) &#123;</span><br><span class="line">      <span class="keyword">module</span>.registerComponents(applicationContext, glide, glide.registry);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span>) &#123;</span><br><span class="line">      annotationGeneratedModule.registerComponents(applicationContext, glide, glide.registry);</span><br><span class="line">    &#125;</span><br><span class="line">    applicationContext.registerComponentCallbacks(glide);</span><br><span class="line">    Glide.glide = glide;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后在GlideBuilder里面build出一个glide对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Glide <span class="title">build</span><span class="params">(@NonNull Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sourceExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      sourceExecutor = GlideExecutor.newSourceExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (diskCacheExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (animationExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      animationExecutor = GlideExecutor.newAnimationExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (memorySizeCalculator == <span class="keyword">null</span>) &#123;</span><br><span class="line">      memorySizeCalculator = <span class="keyword">new</span> MemorySizeCalculator.Builder(context).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (connectivityMonitorFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">      connectivityMonitorFactory = <span class="keyword">new</span> DefaultConnectivityMonitorFactory();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bitmapPool == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">int</span> size = memorySizeCalculator.getBitmapPoolSize();</span><br><span class="line">      <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        bitmapPool = <span class="keyword">new</span> LruBitmapPool(size);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        bitmapPool = <span class="keyword">new</span> BitmapPoolAdapter();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (arrayPool == <span class="keyword">null</span>) &#123;</span><br><span class="line">      arrayPool = <span class="keyword">new</span> LruArrayPool(memorySizeCalculator.getArrayPoolSizeInBytes());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (memoryCache == <span class="keyword">null</span>) &#123;</span><br><span class="line">      memoryCache = <span class="keyword">new</span> LruResourceCache(memorySizeCalculator.getMemoryCacheSize());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (diskCacheFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">      diskCacheFactory = <span class="keyword">new</span> InternalCacheDiskCacheFactory(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (engine == <span class="keyword">null</span>) &#123;</span><br><span class="line">      engine = <span class="keyword">new</span> Engine(</span><br><span class="line">              memoryCache,</span><br><span class="line">              diskCacheFactory,</span><br><span class="line">              diskCacheExecutor,</span><br><span class="line">              sourceExecutor,</span><br><span class="line">              GlideExecutor.newUnlimitedSourceExecutor(),</span><br><span class="line">              GlideExecutor.newAnimationExecutor(),</span><br><span class="line">              isActiveResourceRetentionAllowed);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (defaultRequestListeners == <span class="keyword">null</span>) &#123;</span><br><span class="line">      defaultRequestListeners = Collections.emptyList();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      defaultRequestListeners = Collections.unmodifiableList(defaultRequestListeners);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RequestManagerRetriever requestManagerRetriever =</span><br><span class="line">        <span class="keyword">new</span> RequestManagerRetriever(requestManagerFactory);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Glide(</span><br><span class="line">        context,</span><br><span class="line">        engine,</span><br><span class="line">        memoryCache,</span><br><span class="line">        bitmapPool,</span><br><span class="line">        arrayPool,</span><br><span class="line">        requestManagerRetriever,</span><br><span class="line">        connectivityMonitorFactory,</span><br><span class="line">        logLevel,</span><br><span class="line">        defaultRequestOptions.lock(),</span><br><span class="line">        defaultTransitionOptions,</span><br><span class="line">        defaultRequestListeners,</span><br><span class="line">        isLoggingRequestOriginsEnabled);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>英语单词：</li>
-</ul>
-<p>thumbnails：n   拇指甲;索引图像;(打印预览)略图;</p>
-<p>retrieved：v  取回;索回;检索数据;扭转颓势;挽回;找回</p>
-<p>vein:  n   静脉;叶脉;翅脉;纹理;纹路;条纹;</p>
-<p>variants:  n  变种;变体;变形;</p>
-<p>migrated：v  (随季节变化)迁徙;移居;迁移;移动;转移;</p>
-<ul>
-<li>思考：</li>
-</ul>
-<p>1、注解与注解生成器</p>
-<p>2、glide如何新增配置项和自定义模块</p>
-<p>3、Collections.emptyList</p>
-<p>4、ComponentCallbacks与ComponentCallbacks2</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.buguo.fun/2019/08/01/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="潘江">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/header.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="bugou_江哥">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/01/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-01T20:23:43+08:00">
-                2019-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">Hexo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
+		  <span class="post-meta-divider">|</span>
+		  <span id="busuanzi_value_page_pv"></span>次阅读
 		
           
             <div class="post-wordcount">
@@ -626,24 +428,34 @@
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <p>首先从glide的使用方式来一步一步分析glide的源码，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(myFragment)</span><br><span class="line">     .load(url)</span><br><span class="line">     .centerCrop()</span><br><span class="line">     .placeholder(R.drawable.loading_spinner)</span><br><span class="line">     .into(myImageView);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>从Glide类的with方法开始分析，来了解Glide对象是如何被创建的，with方法有几个重载方法，分别可以传入Context、Activity、FragmentActivity、android.support.v4.app.Fragment、android.app.Fragment、View，它们最终会调用如下方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@NonNull</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> RequestManagerRetriever <span class="title">getRetriever</span><span class="params">(@Nullable Context context)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Context could be null for other reasons (ie the user passes in null), but in practice it will</span></span><br><span class="line">    <span class="comment">// only occur due to errors with the Fragment lifecycle.</span></span><br><span class="line">    Preconditions.checkNotNull(</span><br><span class="line">        context,</span><br><span class="line">        <span class="string">"You cannot start a load on a not yet attached View or a Fragment where getActivity() "</span></span><br><span class="line">            + <span class="string">"returns null (which usually occurs when getActivity() is called before the Fragment "</span></span><br><span class="line">            + <span class="string">"is attached or after the Fragment is destroyed)."</span>);</span><br><span class="line">    <span class="keyword">return</span> Glide.get(context).getRequestManagerRetriever();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">============================================================================</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the singleton.</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> the singleton</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="meta">@NonNull</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Glide <span class="title">get</span><span class="params">(@NonNull Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (glide == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">synchronized</span> (Glide.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (glide == <span class="keyword">null</span>) &#123;</span><br><span class="line">          checkAndInitializeGlide(context);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> glide;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>从上述代码可以看出get方法对Gilde初始化了，创建了一个单例。更详细的在initializeGlide这个方法里面，这个方法是创建glide对象的核心方法，从这个方法里可以看出，注解和manifest的配置可以扩展Glide的功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initializeGlide</span><span class="params">(@NonNull Context context, @NonNull GlideBuilder builder)</span> </span>&#123;</span><br><span class="line">    Context applicationContext = context.getApplicationContext();</span><br><span class="line">    <span class="comment">//如果没有使用到glide的注解来增加配置项，这里回空</span></span><br><span class="line">    GeneratedAppGlideModule annotationGeneratedModule = getAnnotationGeneratedGlideModules();</span><br><span class="line">    List&lt;com.bumptech.glide.<span class="keyword">module</span>.GlideModule&gt; manifestModules = Collections.emptyList();</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule == <span class="keyword">null</span> || annotationGeneratedModule.isManifestParsingEnabled()) &#123;</span><br><span class="line">        <span class="comment">//minifest没有配置的话，这里也是空</span></span><br><span class="line">      manifestModules = <span class="keyword">new</span> ManifestParser(applicationContext).parse();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span></span><br><span class="line">        &amp;&amp; !annotationGeneratedModule.getExcludedModuleClasses().isEmpty()) &#123;</span><br><span class="line">      Set&lt;Class&lt;?&gt;&gt; excludedModuleClasses =</span><br><span class="line">          annotationGeneratedModule.getExcludedModuleClasses();</span><br><span class="line">      Iterator&lt;com.bumptech.glide.<span class="keyword">module</span>.GlideModule&gt; iterator = manifestModules.iterator();</span><br><span class="line">      <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">        com.bumptech.glide.<span class="keyword">module</span>.GlideModule current = iterator.next();</span><br><span class="line">        <span class="keyword">if</span> (!excludedModuleClasses.contains(current.getClass())) &#123;</span><br><span class="line">          <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (Log.isLoggable(TAG, Log.DEBUG)) &#123;</span><br><span class="line">          Log.d(TAG, <span class="string">"AppGlideModule excludes manifest GlideModule: "</span> + current);</span><br><span class="line">        &#125;</span><br><span class="line">        iterator.remove();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (Log.isLoggable(TAG, Log.DEBUG)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule glideModule : manifestModules) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Discovered GlideModule from manifest: "</span> + glideModule.getClass());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RequestManagerRetriever.RequestManagerFactory factory =</span><br><span class="line">        annotationGeneratedModule != <span class="keyword">null</span></span><br><span class="line">            ? annotationGeneratedModule.getRequestManagerFactory() : <span class="keyword">null</span>;</span><br><span class="line">    builder.setRequestManagerFactory(factory);</span><br><span class="line">    <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule <span class="keyword">module</span> : manifestModules) &#123;</span><br><span class="line">      <span class="keyword">module</span>.applyOptions(applicationContext, builder);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span>) &#123;</span><br><span class="line">      annotationGeneratedModule.applyOptions(applicationContext, builder);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//真正创建glide对象在这里</span></span><br><span class="line">    Glide glide = builder.build(applicationContext);</span><br><span class="line">    <span class="keyword">for</span> (com.bumptech.glide.<span class="keyword">module</span>.GlideModule <span class="keyword">module</span> : manifestModules) &#123;</span><br><span class="line">      <span class="keyword">module</span>.registerComponents(applicationContext, glide, glide.registry);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (annotationGeneratedModule != <span class="keyword">null</span>) &#123;</span><br><span class="line">      annotationGeneratedModule.registerComponents(applicationContext, glide, glide.registry);</span><br><span class="line">    &#125;</span><br><span class="line">    applicationContext.registerComponentCallbacks(glide);</span><br><span class="line">    Glide.glide = glide;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>然后在GlideBuilder里面build出一个glide对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Glide <span class="title">build</span><span class="params">(@NonNull Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sourceExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      sourceExecutor = GlideExecutor.newSourceExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (diskCacheExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (animationExecutor == <span class="keyword">null</span>) &#123;</span><br><span class="line">      animationExecutor = GlideExecutor.newAnimationExecutor();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (memorySizeCalculator == <span class="keyword">null</span>) &#123;</span><br><span class="line">      memorySizeCalculator = <span class="keyword">new</span> MemorySizeCalculator.Builder(context).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (connectivityMonitorFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">      connectivityMonitorFactory = <span class="keyword">new</span> DefaultConnectivityMonitorFactory();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bitmapPool == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">int</span> size = memorySizeCalculator.getBitmapPoolSize();</span><br><span class="line">      <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        bitmapPool = <span class="keyword">new</span> LruBitmapPool(size);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        bitmapPool = <span class="keyword">new</span> BitmapPoolAdapter();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (arrayPool == <span class="keyword">null</span>) &#123;</span><br><span class="line">      arrayPool = <span class="keyword">new</span> LruArrayPool(memorySizeCalculator.getArrayPoolSizeInBytes());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (memoryCache == <span class="keyword">null</span>) &#123;</span><br><span class="line">      memoryCache = <span class="keyword">new</span> LruResourceCache(memorySizeCalculator.getMemoryCacheSize());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (diskCacheFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">      diskCacheFactory = <span class="keyword">new</span> InternalCacheDiskCacheFactory(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (engine == <span class="keyword">null</span>) &#123;</span><br><span class="line">      engine = <span class="keyword">new</span> Engine(</span><br><span class="line">              memoryCache,</span><br><span class="line">              diskCacheFactory,</span><br><span class="line">              diskCacheExecutor,</span><br><span class="line">              sourceExecutor,</span><br><span class="line">              GlideExecutor.newUnlimitedSourceExecutor(),</span><br><span class="line">              GlideExecutor.newAnimationExecutor(),</span><br><span class="line">              isActiveResourceRetentionAllowed);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (defaultRequestListeners == <span class="keyword">null</span>) &#123;</span><br><span class="line">      defaultRequestListeners = Collections.emptyList();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      defaultRequestListeners = Collections.unmodifiableList(defaultRequestListeners);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RequestManagerRetriever requestManagerRetriever =</span><br><span class="line">        <span class="keyword">new</span> RequestManagerRetriever(requestManagerFactory);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Glide(</span><br><span class="line">        context,</span><br><span class="line">        engine,</span><br><span class="line">        memoryCache,</span><br><span class="line">        bitmapPool,</span><br><span class="line">        arrayPool,</span><br><span class="line">        requestManagerRetriever,</span><br><span class="line">        connectivityMonitorFactory,</span><br><span class="line">        logLevel,</span><br><span class="line">        defaultRequestOptions.lock(),</span><br><span class="line">        defaultTransitionOptions,</span><br><span class="line">        defaultRequestListeners,</span><br><span class="line">        isLoggingRequestOriginsEnabled);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<ul>
+<li>英语单词：</li>
+</ul>
+<p>thumbnails：n   拇指甲;索引图像;(打印预览)略图;</p>
+<p>retrieved：v  取回;索回;检索数据;扭转颓势;挽回;找回</p>
+<p>vein:  n   静脉;叶脉;翅脉;纹理;纹路;条纹;</p>
+<p>variants:  n  变种;变体;变形;</p>
+<p>migrated：v  (随季节变化)迁徙;移居;迁移;移动;转移;</p>
+<ul>
+<li>思考：</li>
+</ul>
+<p>1、注解与注解生成器</p>
+<p>2、glide如何新增配置项和自定义模块</p>
+<p>3、Collections.emptyList</p>
+<p>4、ComponentCallbacks与ComponentCallbacks2</p>
 
-          
-        
       
     </div>
     
@@ -653,19 +465,70 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechat-reward-image.png" alt="潘江 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay-reward-image.jpg" alt="潘江 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/Glide/" rel="tag"># Glide</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/01/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -675,10 +538,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -686,6 +550,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -946,6 +814,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

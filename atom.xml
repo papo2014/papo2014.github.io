@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.buguo.fun/"/>
-  <updated>2019-08-04T01:37:12.699Z</updated>
+  <updated>2019-08-10T01:17:01.963Z</updated>
   <id>https://www.buguo.fun/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Gilde对象是如何被创建的</title>
+    <link href="https://www.buguo.fun/2019/08/08/gilde%E5%AD%A6%E4%B9%A0%E4%B9%8B%E4%BD%BF%E7%94%A8%E7%AF%87/"/>
+    <id>https://www.buguo.fun/2019/08/08/gilde学习之使用篇/</id>
+    <published>2019-08-08T12:33:39.000Z</published>
+    <updated>2019-08-10T01:17:01.963Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;首先从glide的使用方式来一步一步分析glide的源码，如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+      <category term="Android" scheme="https://www.buguo.fun/categories/Android/"/>
+    
+    
+      <category term="Glide" scheme="https://www.buguo.fun/tags/Glide/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hello World</title>
     <link href="https://www.buguo.fun/2019/08/01/hello-world/"/>
     <id>https://www.buguo.fun/2019/08/01/hello-world/</id>
     <published>2019-08-01T12:23:43.981Z</published>
-    <updated>2019-08-04T01:37:12.699Z</updated>
+    <updated>2019-08-10T01:30:41.394Z</updated>
     
     <summary type="html">
     
